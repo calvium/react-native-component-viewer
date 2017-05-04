@@ -57,7 +57,7 @@ class DebugSceneList extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <SearchableList onClose={this.props.onClose} onPressRow={this.onPressRow} items={this.state.all} />}
+        <SearchableList onClose={this.props.onClose} onPressRow={this.onPressRow} items={this.state.all} />
         {this.state.modalVisible
           ? [
               <View key={'modal1'} style={styles.selectedComponentWrapper}>
