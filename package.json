@@ -1,0 +1,33 @@
+{
+  "name": "react-native-component-viewer",
+  "version": "0.0.1",
+  "description": "A searchable list of components or scenes in your app. Handy for tweaking layout or design without using the app",
+  "main": "index.js",
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/calvium/react-native-component-viewer.git"
+  },
+  "keywords": [
+    "react",
+    "native",
+    "component",
+    "viewer",
+    "tester",
+    "debug"
+  ],
+  "author": "Ben Clayton <ben@calvium.com> (https://www.calvium.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/calvium/react-native-component-viewer/issues"
+  },
+  "homepage": "https://github.com/calvium/react-native-component-viewer#readme",
+  "dependencies": {
+    "ramda": "^0.23.0"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-native": "*"
+  }
+}
