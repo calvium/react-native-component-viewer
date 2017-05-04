@@ -18,7 +18,7 @@ npm i -S react-native-component-viewer
 
 # Usage
 
-This library does not assume any specific navigation library is in use. It can thus be configured to work with any, for example react-navigation, react-native-router-flux, and others.
+This library does not assume any specific navigation library is in use. As a result it can be configured for us with [react-navigation](https://github.com/react-community/react-navigation), [react-native-router-flux](https://github.com/aksonov/react-native-router-flux), and others.
 
 ## Usage in react-native-router-flux
 
