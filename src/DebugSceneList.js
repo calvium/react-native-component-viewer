@@ -10,7 +10,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  selectedComponentWrapper: {position: 'absolute', left: 0, top: 0, right: 0, bottom: 0},
+  selectedComponentWrapper: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: colors.lightGrayColor,
+  },
   closeButton: {
     position: 'absolute',
     left: 0,
@@ -50,6 +57,7 @@ class DebugSceneList extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <SearchableList onClose={this.props.onClose} onPressRow={this.onPressRow} items={this.state.all} />
         {this.state.modalVisible
           ? [
               <View key={'modal1'} style={styles.selectedComponentWrapper}>
@@ -59,7 +67,7 @@ class DebugSceneList extends Component {
                 <Text style={styles.closeButtonText}>Close</Text>
               </TouchableHighlight>,
             ]
-          : <SearchableList onClose={this.props.onClose} onPressRow={this.onPressRow} items={this.state.all} />}
+          : undefined}
       </View>
     );
   }
