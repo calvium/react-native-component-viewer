@@ -83,7 +83,7 @@ addTestScene(<MySceneComponent items={[]}/>, 'Empty');
 addTestScene(<MySceneComponent items={['more','test','data']}/>, 'Three items');
 ```
 
-##Usage with Redux
+## Usage with Redux
 
 If you're using the `react-redux` `connect` method, make sure you pass the 'unconnected' version of the component to `addTestScene`, e.g.:
 
