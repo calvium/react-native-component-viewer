@@ -1,6 +1,3 @@
-/**
- * Show this component..
- */
 import React, {Component, PropTypes} from 'react';
 
 import {View, StyleSheet, Text, ListView, TextInput, TouchableHighlight, Platform} from 'react-native';
@@ -44,7 +41,7 @@ const styles = StyleSheet.create({
  * Row on the table. Used to display name and title for a single registered scene
  */
 const SceneRow = ({name, title, onPress}) => (
-  <TouchableHighlight onPress={onPress} underlayColor={'#ddd'} style={styles.sceneRow}>
+  <TouchableHighlight onPress={onPress} underlayColor={colors.lightGrayColor} style={styles.sceneRow}>
     <View>
       <Text style={styles.sceneRowTitle}>{name}</Text>
       {title ? <Text style={styles.sceneRowSubtitle}>{title}</Text> : undefined}

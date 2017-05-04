@@ -1,6 +1,3 @@
-/**
- * Show this component..
- */
 import React, {Component, PropTypes} from 'react';
 
 import {View, StyleSheet, Text, TouchableHighlight} from 'react-native';
@@ -29,6 +26,11 @@ const styles = StyleSheet.create({
   },
 });
 
+/**
+ * Fills SearchableList with list of scenes.
+ * Displays scenes full-screen when tapped, along with
+ * a small [CLOSE] button to close them again.
+ */
 class DebugSceneList extends Component {
   constructor(props) {
     super(props);

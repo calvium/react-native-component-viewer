@@ -2,13 +2,13 @@ import React from 'react';
 import * as R from 'ramda';
 
 /**
- * Used to create a quick way to access all screens and components with test data
+ * Type of values in registeredScenes
  */
-export type RegisteredSceneType = {
-  name: string,
-  title: string,
-  component: React$Element,
-};
+export type RegisteredSceneType = {|
+  name: string, // extracted from the component's name
+  title: ?string, // title used when scene is used several times with different test data
+  component: React$Element, // the actual element itself
+|};
 
 const registeredScenes: {|[string]: RegisteredSceneType|} = {};
 

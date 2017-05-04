@@ -1,3 +1,6 @@
+/**
+ * Colors used in the library
+ */
 const colors = {
   blackColor: 'black',
   whiteColor: 'white',
