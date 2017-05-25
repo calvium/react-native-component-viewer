@@ -83,6 +83,20 @@ addTestScene(<MySceneComponent items={[]}/>, 'Empty');
 addTestScene(<MySceneComponent items={['more','test','data']}/>, 'Three items');
 ```
 
+# Making space for header and footer bars
+
+In real app, your screens will normally have a header (and perhaps a footer). This means your actual component has a smaller space to render in.
+
+To support this there's a third optional argument to `addTestScene` called `wrapperStyle`. This is a standard React Native View style.
+Use the `padding` properties to adjust the rendering inset to your scene. You may want to store the style somewhere central in your app so
+you don't have to type it out each time you use `addTestScene`. 
+
+Example:
+
+```js
+addTestScene(<MySceneComponent items={['more','test','data']}/>, 'Three items', {paddingTop: 44, backgroundColor: 'black'});
+```
+ 
 ## Usage with Redux
 
 If you're using the `react-redux` `connect` method, make sure you pass the 'unconnected' version of the component to `addTestScene`, e.g.:
