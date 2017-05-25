@@ -18,7 +18,7 @@ const registeredScenes: {|[string]: RegisteredSceneType|} = {};
  *
  * component - output of a render e.g. <MyComponent param={value}/>.
  */
-function addTestScene(component: React$Element, title: ?string) {
+function addTestScene(component: React$Element, title: ?string, wrapperStyle: ?Object = {}) {
   if (!component || !component.type) {
     return;
   }
@@ -30,7 +30,7 @@ function addTestScene(component: React$Element, title: ?string) {
     console.log(`Scene already registered with title=${key}. Overwriting..`);
   }
 
-  registeredScenes[key] = {name: componentName, component, title};
+  registeredScenes[key] = {name: componentName, component, title, wrapperStyle};
 }
 
 /**

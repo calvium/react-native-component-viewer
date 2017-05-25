@@ -47,11 +47,18 @@ class DebugSceneList extends Component {
       all: allScenes,
       modalVisible: false,
       selectedComponent: undefined,
+      selectedComponentWrapperStyle: undefined,
     };
 
-    this.onHideScene = () => this.setState({modalVisible: false, selectedComponent: undefined});
+    this.onHideScene = () =>
+      this.setState({modalVisible: false, selectedComponent: undefined, selectedComponentWrapperStyle: undefined});
 
-    this.onPressRow = data => this.setState({modalVisible: true, selectedComponent: data.component});
+    this.onPressRow = data =>
+      this.setState({
+        modalVisible: true,
+        selectedComponent: data.component,
+        selectedComponentWrapperStyle: data.wrapperStyle,
+      });
   }
 
   render() {
@@ -60,7 +67,7 @@ class DebugSceneList extends Component {
         <SearchableList onClose={this.props.onClose} onPressRow={this.onPressRow} items={this.state.all} />
         {this.state.modalVisible
           ? [
-              <View key={'modal1'} style={styles.selectedComponentWrapper}>
+              <View key={'modal1'} style={[styles.selectedComponentWrapper, this.state.selectedComponentWrapperStyle]}>
                 {this.state.selectedComponent}
               </View>,
               <TouchableHighlight key={'modal2'} style={styles.closeButton} onPress={this.onHideScene}>
