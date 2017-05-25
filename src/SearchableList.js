@@ -8,6 +8,7 @@ import {colors} from './theme';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.whiteColor,
   },
   sceneRow: {borderBottomColor: colors.blackColor, borderBottomWidth: 1, height: 80, justifyContent: 'center'},
   sceneRowTitle: {alignSelf: 'center', fontSize: 20},
@@ -17,6 +18,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.lightGrayColor,
     padding: 5,
     flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: colors.grayColor,
   },
   searchInput: {
     flex: 1,
@@ -29,11 +32,18 @@ const styles = StyleSheet.create({
     minHeight: 40,
   },
   doneButton: {
-    padding: 10,
+    padding: 6,
+    borderRadius: 5,
+    margin: 4,
   },
   doneButtonText: {
     color: colors.blackColor,
     fontWeight: 'bold',
+  },
+  noItemsText: {
+    alignSelf: 'center',
+    fontSize: 20,
+    marginTop: 20,
   },
 });
 
@@ -87,6 +97,7 @@ class SearchableList extends Component {
       <View style={styles.container}>
         <View key={'searchWrapper'} style={styles.searchWrapper}>
           <TextInput
+            underlineColorAndroid={'transparent'}
             autoCapitalize={'none'}
             autoCorrect={false}
             enablesReturnKeyAutomatically={true}
@@ -94,11 +105,19 @@ class SearchableList extends Component {
             onChangeText={this.search}
             clearButtonMode={'while-editing'}
           />
-          <TouchableHighlight underlayColor={'gray'} onPress={this.props.onClose} style={styles.doneButton}>
+          <TouchableHighlight underlayColor={colors.whiteColor} onPress={this.props.onClose} style={styles.doneButton}>
             <Text style={styles.doneButtonText}>Done</Text>
           </TouchableHighlight>
         </View>
-        <ListView key={'list'} style={{flex: 1}} dataSource={this.state.ds} renderRow={this.renderRow} />
+        {this.state.ds.getRowCount()
+          ? <ListView
+              enableEmptySections
+              key={'list'}
+              style={{flex: 1}}
+              dataSource={this.state.ds}
+              renderRow={this.renderRow}
+            />
+          : <Text style={styles.noItemsText}>No items</Text>}
       </View>
     );
   }
