@@ -28,8 +28,6 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
   },
   componentTitle: {
-    borderBottomWidth: 1,
-    borderBottomColor: colors.grayColor,
     color: colors.grayColor,
     marginBottom: 5,
   },

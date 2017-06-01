@@ -11,8 +11,13 @@ const styles = StyleSheet.create({
     backgroundColor: colors.whiteColor,
   },
   sceneRow: {borderBottomColor: colors.blackColor, borderBottomWidth: 1, height: 80, justifyContent: 'center'},
-  sceneRowTitle: {marginHorizontal: 20, alignSelf: 'center', fontSize: 20},
-  sceneRowSubtitle: {marginHorizontal: 20, alignSelf: 'center', fontSize: 10},
+  sceneRowTitle: {
+    color: colors.blackColor,
+    marginHorizontal: 20,
+    alignSelf: 'center',
+    fontSize: 20,
+  },
+  sceneRowSubtitle: {marginHorizontal: 20, alignSelf: 'center', fontSize: 10, color: colors.grayColor},
   searchWrapper: {
     paddingTop: Platform.OS === 'ios' ? 20 : 10,
     backgroundColor: colors.lightGrayColor,
@@ -41,6 +46,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   noItemsText: {
+    color: colors.blackColor,
     alignSelf: 'center',
     fontSize: 20,
     marginTop: 20,
