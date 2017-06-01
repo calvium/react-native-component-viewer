@@ -79,7 +79,7 @@ function addTest(component: React$Element, title: ?string, wrapperStyle: ?Object
  * Sorted by name.
  */
 function getTests(): Array<RegisteredItemType> {
-  return R.sort(({name: name1}, {name: name2}) => name1 > name2, R.values(registeredItems));
+  return R.sort(({name: name1}, {name: name2}) => (name1 > name2 ? 1 : -1), R.values(registeredItems));
 }
 
 /**
