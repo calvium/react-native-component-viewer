@@ -1,9 +1,10 @@
 import React, {Component, PropTypes} from 'react';
 
-import {View, StyleSheet, Text, TouchableHighlight} from 'react-native';
-import {getTestScenes} from './TestRegistry';
-
+import {View, StyleSheet, Text, TouchableHighlight, Alert, ScrollView} from 'react-native';
+import {getTests} from './TestRegistry';
+import type {RegisteredItemType} from './TestRegistry';
 import SearchableList from './SearchableList';
+
 import {colors} from './theme';
 
 const styles = StyleSheet.create({
@@ -17,6 +18,18 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     backgroundColor: colors.lightGrayColor,
+  },
+  componentModalScrollView: {
+    alignItems: 'center',
+  },
+  componentWrapper: {
+    margin: 20,
+    alignSelf: 'stretch',
+  },
+  componentTitle: {
+    borderBottomWidth: 1,
+    borderBottomColor: colors.grayColor,
+    color: colors.grayColor,
   },
   closeButton: {
     position: 'absolute',
@@ -42,39 +55,62 @@ class DebugSceneList extends Component {
   constructor(props) {
     super(props);
 
-    const allScenes = getTestScenes();
+    const allScenes = getTests();
     this.state = {
       all: allScenes,
       modalVisible: false,
-      selectedComponent: undefined,
-      selectedComponentWrapperStyle: undefined,
+      selectedItem: undefined,
     };
 
     this.onHideScene = () =>
-      this.setState({modalVisible: false, selectedComponent: undefined, selectedComponentWrapperStyle: undefined});
+      this.setState({modalVisible: false, selectedItem: undefined});
 
-    this.onPressRow = data =>
+    this.onPressRow = (data: RegisteredItemType) => {
       this.setState({
         modalVisible: true,
-        selectedComponent: data.component,
-        selectedComponentWrapperStyle: data.wrapperStyle,
+        selectedItem: data,
       });
+    };
+  }
+
+  renderSceneModal() {
+    return (
+      <View key={'modal1'} style={[styles.selectedComponentWrapper, this.state.selectedItem && this.state.selectedItem.wrapperStyle]}>
+        {this.state.selectedItem.component}
+      </View>
+    );
+  }
+
+  renderComponentModal() {
+    const {selectedItem}:{ selectedItem: RegisteredItemType } = this.state;
+    return (
+      <View key={'modal1'} style={[styles.selectedComponentWrapper, selectedItem && selectedItem.wrapperStyle]}>
+        <ScrollView contentContainerStyle={styles.componentModalScrollView} automaticallyAdjustContentInsets={true}>
+          {selectedItem.states.map((i: RegisteredItemType) => {
+            return <View key={`${i.name}_${i.title}`} style={[styles.componentWrapper, i.wrapperStyle]}>
+              <Text style={styles.componentTitle}>{i.title}</Text>
+              {i.component}
+            </View>
+          })}
+        </ScrollView>
+      </View>
+    );
+  }
+
+  renderModal() {
+    return [
+      this.state.selectedItem.type === 'scene' ? this.renderSceneModal() : this.renderComponentModal(),
+      <TouchableHighlight key={'modal2'} style={styles.closeButton} onPress={this.onHideScene}>
+        <Text style={styles.closeButtonText}>Close</Text>
+      </TouchableHighlight>,
+    ];
   }
 
   render() {
     return (
       <View style={styles.container}>
         <SearchableList onClose={this.props.onClose} onPressRow={this.onPressRow} items={this.state.all} />
-        {this.state.modalVisible
-          ? [
-              <View key={'modal1'} style={[styles.selectedComponentWrapper, this.state.selectedComponentWrapperStyle]}>
-                {this.state.selectedComponent}
-              </View>,
-              <TouchableHighlight key={'modal2'} style={styles.closeButton} onPress={this.onHideScene}>
-                <Text style={styles.closeButtonText}>Close</Text>
-              </TouchableHighlight>,
-            ]
-          : undefined}
+        {this.state.modalVisible ? this.renderModal() : undefined}
       </View>
     );
   }

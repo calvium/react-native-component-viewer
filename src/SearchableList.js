@@ -11,10 +11,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.whiteColor,
   },
   sceneRow: {borderBottomColor: colors.blackColor, borderBottomWidth: 1, height: 80, justifyContent: 'center'},
-  sceneRowTitle: {alignSelf: 'center', fontSize: 20},
-  sceneRowSubtitle: {alignSelf: 'center', fontSize: 10},
+  sceneRowTitle: {marginHorizontal: 20, alignSelf: 'center', fontSize: 20},
+  sceneRowSubtitle: {marginHorizontal: 20, alignSelf: 'center', fontSize: 10},
   searchWrapper: {
-    paddingTop: Platform.OS === 'ios' ? 20 : 0,
+    paddingTop: Platform.OS === 'ios' ? 20 : 10,
     backgroundColor: colors.lightGrayColor,
     padding: 5,
     flexDirection: 'row',
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     flex: 1,
-    borderRadius: 10,
+    borderRadius: Platform.OS == 'ios' ? 10 : 0,
     backgroundColor: colors.whiteColor,
     alignSelf: 'stretch',
     borderWidth: 1,
@@ -54,7 +54,9 @@ const SceneRow = ({name, title, onPress}) => (
   <TouchableHighlight onPress={onPress} underlayColor={colors.lightGrayColor} style={styles.sceneRow}>
     <View>
       <Text style={styles.sceneRowTitle}>{name}</Text>
-      {title ? <Text style={styles.sceneRowSubtitle}>{title}</Text> : undefined}
+      {title
+        ? <Text numberOfLines={1} ellipsizeMode={'tail'} style={styles.sceneRowSubtitle}>{title}</Text>
+        : undefined}
     </View>
   </TouchableHighlight>
 );
@@ -92,6 +94,17 @@ class SearchableList extends Component {
     };
   }
 
+  componentDidMount() {
+    // Attempt to get around issue where sometimes the list appears blank before you scroll it
+    setTimeout(() => {
+      if (this.listView) {
+        this.listView.scrollTo({x: 0, y: 1, animated: true});
+      }
+    }, 150);
+  }
+
+  listView: ListView;
+
   render() {
     return (
       <View style={styles.container}>
@@ -111,6 +124,7 @@ class SearchableList extends Component {
         </View>
         {this.state.ds.getRowCount()
           ? <ListView
+              ref={r => (this.listView = r)}
               enableEmptySections
               key={'list'}
               style={{flex: 1}}
