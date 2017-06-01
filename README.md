@@ -27,7 +27,7 @@ Here's how to use it in react-native-router-flux:
 - First, add the Scene to your list of scenes at the root of your app:
 
 ```js
-import {DebugSceneList} from 'react-native-component-viewer';
+import {ComponentViewer} from 'react-native-component-viewer';
 
 //.. other imports
 
@@ -35,26 +35,26 @@ class MyRootComponent extends React.Component {
   render() {
     return <Scene key="MyRootScene">
       {/* Insert line below.. */}
-      <Scene key="DebugSceneList" hideNavBar={true} component={DebugSceneList}/>
+      <Scene key="ComponentViewer" hideNavBar={true} component={ComponentViewer}/>
     </Scene>
   }
 }
 ```
 
-- Then, at the point you want to show the debug list UI (e.g. if your in-app settings), call `Actions.DebugSceneList({onClose: Actions.pop})`.
+- Then, at the point you want to show the debug list UI (e.g. if your in-app settings), call `Actions.ComponentViewer({onClose: Actions.pop})`.
 
 The `onClose` prop above runs the function that closes the list UI when the `Done` button is pressed on the UI.
 
 Example:
 ```js
-<TouchableHighlight onPress={()=>Actions.DebugSceneList({onClose: Actions.pop})}>
+<TouchableHighlight onPress={()=>Actions.ComponentViewer({onClose: Actions.pop})}>
     <Text>Click to view scenes</Text>
 </TouchableHighlight>
 ```
 
 When you first run this you'll get an empty list. You need to manually register each screen with the system (along with their test prop data) before you can start.
 
-> Other navigation systems will be similar - just make sure to pass a function that closes the list as the `onClose` property of the `<DebugSceneList>` component. This'll ensure the `Done` button on the list
+> Other navigation systems will be similar - just make sure to pass a function that closes the list as the `onClose` property of the `<ComponentViewer>` component. This'll ensure the `Done` button on the list
 returns to your previous page.
 
 # Registering test screens
@@ -62,7 +62,7 @@ returns to your previous page.
 On each screen you want to test, add the following:
 
 ```js
-import {addTestScene} from 'react-native-component-viewer'; // <-- Add this import
+import {addSceneTest} from 'react-native-component-viewer'; // <-- Add this import
 
 class MySceneComponent extends React.Component {
   //... your scene component here
@@ -78,12 +78,12 @@ addTestScene(<MySceneComponent
 You can add the same component several times with different data. To do this, add a description as the second parameter to `addTestScene`:
 
 ```js
-addTestScene(<MySceneComponent items={[]}/>, 'Empty');
+addSceneTest(<MySceneComponent items={[]}/>, 'Empty');
 
-addTestScene(<MySceneComponent items={['more','test','data']}/>, 'Three items');
+addSceneTest(<MySceneComponent items={['more','test','data']}/>, 'Three items');
 ```
 
-# Making space for header and footer bars
+## Making space for header and footer bars
 
 In real app, your screens will normally have a header (and perhaps a footer). This means your actual component has a smaller space to render in.
 
@@ -94,8 +94,34 @@ you don't have to type it out each time you use `addTestScene`.
 Example:
 
 ```js
-addTestScene(<MySceneComponent items={['more','test','data']}/>, 'Three items', {paddingTop: 44, backgroundColor: 'black'});
+addSceneTest(<MySceneComponent items={['more','test','data']}/>, 'Three items', {paddingTop: 44, backgroundColor: 'black'});
 ```
+
+# Registering Test Components
+
+When testing acomponent such as a Button, you'll most likely want to view all the possible states of the button on a single screen
+
+For example:
+
+![Compoment States example](docs/buttons.png)
+
+To do this use the `addComponentTest` method.
+
+For example:
+
+```js
+import {addComponentTest} from 'react-native-component-viewer'; // <-- Add this import
+
+// add tests
+const wrapperStyle = {width: 200}; // style of container holding the component - useful for constraining to different sizes
+addComponentTest(
+      <Button type={'large'} title={'Button title'} />,
+      `Large Button`, // Title
+      wrapperStyle,
+    )
+```
+
+Multiple tests for a single component appear in the ComponentViewer list as a single entry. Tapping the entry displays a ScrollView containing all your tests.
  
 ## Usage with Redux
 
