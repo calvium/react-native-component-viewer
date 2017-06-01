@@ -12,7 +12,7 @@ export type RegisteredItemType = {|
   states?: Array<RegisteredItemType>,
 |};
 
-const registeredItems: {| [string]: RegisteredItemType |} = {};
+const registeredItems: {|[string]: RegisteredItemType|} = {};
 
 /**
  * Register a test item. Title is optional.
@@ -22,7 +22,12 @@ const registeredItems: {| [string]: RegisteredItemType |} = {};
  * @param title - subtitle for the test e.g. 'with long name'
  * @param type - For Screens/Scenes that should be displayed full-screen, use type='scene'. To display the same component in different states on the same screen, use type='component'.
  */
-function addComponentTest(component: React$Element, title: ?string, wrapperStyle: ?Object = {}, type: 'scene' | 'component' = 'scene') {
+function addTest(
+  component: React$Element,
+  title: ?string,
+  wrapperStyle: ?Object = {},
+  type: 'scene' | 'component' = 'scene'
+) {
   if (!component || !component.type) {
     return;
   }
@@ -34,42 +39,44 @@ function addComponentTest(component: React$Element, title: ?string, wrapperStyle
 
   switch (type) {
     // For each component, we store an array of different 'views' onto the component
-    case 'component': {
-      const key = componentName;
+    case 'component':
+      {
+        const key = componentName;
 
-      let existing: ?RegisteredItemType = registeredItems[key];
+        let existing: ?RegisteredItemType = registeredItems[key];
 
-      if (existing) {
-        if (!existing.states) {
-          Console.log(`Probably trying to register a compoment on something previously registered as a scene`);
-          return;
+        if (existing) {
+          if (!existing.states) {
+            Console.log(`Probably trying to register a compoment on something previously registered as a scene`);
+            return;
+          }
+          existing.states = R.uniqBy(i => i.title, [...existing.states, itemDetails]); // remove dupes, based on title
+        } else {
+          // Register as empty placeholder so it can be rendered easily in the list
+          existing = {
+            component: null,
+            wrapperStyle: null,
+            name: componentName,
+            title: title,
+            type: 'component',
+            states: [itemDetails],
+          };
         }
-        existing.states = R.uniqBy(i => i.title, [...existing.states, itemDetails]); // remove dupes, based on title
-      } else {
-        // Register as empty placeholder so it can be rendered easily in the list
-        existing = {
-          component: null,
-          wrapperStyle: null,
-          name: componentName,
-          title: title,
-          type: 'component',
-          states: [itemDetails]
-        }
+
+        registeredItems[key] = existing;
+        // title is state1, state2, state3
+        existing.title = R.map((item: RegisteredItemType) => item.title, existing.states).join(', ');
       }
-
-      registeredItems[key] = existing;
-      // title is state1, state2, state3
-      existing.title = R.map((item: RegisteredItemType) => item.title, existing.states).join(', ');
-    }
       break;
     // For scenes, we have a single item
-    case 'scene': {
-      const key = title || componentName;
-      if (registeredItems[key]) {
-        console.log(`Scene already registered with title=${key}. Overwriting..`);
+    case 'scene':
+      {
+        const key = title || componentName;
+        if (registeredItems[key]) {
+          console.log(`Scene already registered with title=${key}. Overwriting..`);
+        }
+        registeredItems[key] = itemDetails;
       }
-      registeredItems[key] = itemDetails;
-    }
       break;
     default:
   }
@@ -83,11 +90,25 @@ function getTests(): Array<RegisteredItemType> {
 }
 
 /**
- * @deprecated use `addTest`
- * Backwards-compatibility.
+ * Add test for a scene
  */
-const addTestScene = addComponentTest;
+const addSceneTest = (component: React$Element, title: ?string, wrapperStyle: ?Object = {}) =>
+  addTest(component, title, wrapperStyle, 'scene');
+
+/**
+ * Add test for a component
+ */
+const addComponentTest = (component: React$Element, title: ?string, wrapperStyle: ?Object = {}) =>
+  addTest(component, title, wrapperStyle, 'component');
+
+/**
+ * @deprecated - use addSceneTest
+ */
+const addTestScene = addSceneTest;
+
+/**
+ * @deprecated - use getTests
+ */
 const getTestScenes = getTests;
 
-
-export {addComponentTest, getTests, addTestScene, getTestScenes};
+export {addSceneTest, addComponentTest, addTestScene, getTests, getTestScenes};
