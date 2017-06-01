@@ -22,7 +22,7 @@ const registeredItems: {| [string]: RegisteredItemType |} = {};
  * @param title - subtitle for the test e.g. 'with long name'
  * @param type - For Screens/Scenes that should be displayed full-screen, use type='scene'. To display the same component in different states on the same screen, use type='component'.
  */
-function addTest(component: React$Element, title: ?string, wrapperStyle: ?Object = {}, type: 'scene' | 'component' = 'scene') {
+function addComponentTest(component: React$Element, title: ?string, wrapperStyle: ?Object = {}, type: 'scene' | 'component' = 'scene') {
   if (!component || !component.type) {
     return;
   }
@@ -86,8 +86,8 @@ function getTests(): Array<RegisteredItemType> {
  * @deprecated use `addTest`
  * Backwards-compatibility.
  */
-const addTestScene = addTest;
+const addTestScene = addComponentTest;
 const getTestScenes = getTests;
 
 
-export {addTest, getTests, addTestScene, getTestScenes};
+export {addComponentTest, getTests, addTestScene, getTestScenes};

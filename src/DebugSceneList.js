@@ -23,13 +23,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   componentWrapper: {
-    margin: 20,
+    marginHorizontal: 20,
+    marginTop: 20,
     alignSelf: 'stretch',
   },
   componentTitle: {
     borderBottomWidth: 1,
     borderBottomColor: colors.grayColor,
     color: colors.grayColor,
+    marginBottom: 5,
   },
   closeButton: {
     position: 'absolute',
