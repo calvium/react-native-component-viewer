@@ -24,12 +24,12 @@ const styles = StyleSheet.create({
   },
   componentWrapper: {
     marginHorizontal: 20,
-    marginTop: 20,
     alignSelf: 'stretch',
   },
   componentTitle: {
     color: colors.grayColor,
     marginBottom: 5,
+    marginTop: 20,
   },
   closeButton: {
     position: 'absolute',
@@ -87,10 +87,11 @@ class DebugSceneList extends Component {
       <View key={'modal1'} style={[styles.selectedComponentWrapper, selectedItem && selectedItem.wrapperStyle]}>
         <ScrollView contentContainerStyle={styles.componentModalScrollView} automaticallyAdjustContentInsets={true}>
           {selectedItem.states.map((i: RegisteredItemType) => {
-            return <View key={`${i.name}_${i.title}`} style={[styles.componentWrapper, i.wrapperStyle]}>
-              <Text style={styles.componentTitle}>{i.title}</Text>
+            return [
+              <Text key={`${i.name}_${i.title}_title`} style={styles.componentTitle}>{i.title}</Text>,
+              <View key={`${i.name}_${i.title}_component`} style={[styles.componentWrapper, i.wrapperStyle]}>
               {i.component}
-            </View>
+            </View>]
           })}
         </ScrollView>
       </View>
