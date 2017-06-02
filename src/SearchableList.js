@@ -91,6 +91,7 @@ class SearchableList extends Component {
      * Search - lowercase everything. Search on name and title
      */
     this.search = filter => {
+      this.props.onSearchChanged(filter);
       const filterLC = String(filter).toLowerCase();
       const filtered = R.filter(
         data => `${data.name} ${data.title}`.toLowerCase().indexOf(filterLC) !== -1,
@@ -147,6 +148,7 @@ SearchableList.defaultProps = {
   items: [],
   onPressRow: () => {},
   onClose: () => {},
+  onSearchChanged: () => {},
 };
 
 SearchableList.propTypes = {

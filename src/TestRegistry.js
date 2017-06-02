@@ -65,7 +65,7 @@ function addTest(
 
         registeredItems[key] = existing;
         // title is state1, state2, state3
-        existing.title = R.map((item: RegisteredItemType) => item.title, existing.states).join(', ');
+        existing.title = `${existing.states.length} test${existing.states.length !== 1 ? 's' : ''}`;
       }
       break;
     // For scenes, we have a single item
