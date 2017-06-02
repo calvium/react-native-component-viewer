@@ -47,7 +47,7 @@ function addTest(
 
         if (existing) {
           if (!existing.states) {
-            Console.log(`Probably trying to register a compoment on something previously registered as a scene`);
+            console.log(`Probably trying to register a component on something previously registered as a scene`);
             return;
           }
           existing.states = R.uniqBy(i => i.title, [...existing.states, itemDetails]); // remove dupes, based on title
