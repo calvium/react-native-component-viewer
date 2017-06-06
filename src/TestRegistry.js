@@ -55,43 +55,43 @@ function addTest(component: React$Element, type: 'scene' | 'component', options:
   switch (type) {
     // For each component, we store an array of different 'views' onto the component
     case 'component':
-    {
-      const key = name;
+      {
+        const key = name;
 
-      let existing: ?RegisteredItemType = registeredItems[key];
+        let existing: ?RegisteredItemType = registeredItems[key];
 
-      if (existing) {
-        if (!existing.states) {
-          console.log(`Probably trying to register a component on something previously registered as a scene`);
-          return;
+        if (existing) {
+          if (!existing.states) {
+            console.log(`Probably trying to register a component on something previously registered as a scene`);
+            return;
+          }
+          existing.states = R.uniqBy(i => i.title, [...existing.states, itemDetails]); // remove dupes, based on title
+        } else {
+          // Register as empty placeholder so it can be rendered easily in the list
+          existing = {
+            component: null,
+            wrapperStyle: null,
+            type: 'component',
+            states: [itemDetails],
+            title,
+            name,
+          };
         }
-        existing.states = R.uniqBy(i => i.title, [...existing.states, itemDetails]); // remove dupes, based on title
-      } else {
-        // Register as empty placeholder so it can be rendered easily in the list
-        existing = {
-          component: null,
-          wrapperStyle: null,
-          type: 'component',
-          states: [itemDetails],
-          title,
-          name,
-        };
-      }
 
-      registeredItems[key] = existing;
-      // title is state1, state2, state3
-      existing.title = `${existing.states.length} test${existing.states.length !== 1 ? 's' : ''}`;
-    }
+        registeredItems[key] = existing;
+        // title is state1, state2, state3
+        existing.title = `${existing.states.length} test${existing.states.length !== 1 ? 's' : ''}`;
+      }
       break;
     // For scenes, we have a single item
     case 'scene':
-    {
-      const key = title || name;
-      if (registeredItems[key]) {
-        console.log(`Scene already registered with title=${key}. Overwriting..`);
+      {
+        const key = title || name;
+        if (registeredItems[key]) {
+          console.log(`Scene already registered with title=${key}. Overwriting..`);
+        }
+        registeredItems[key] = itemDetails;
       }
-      registeredItems[key] = itemDetails;
-    }
       break;
     default:
   }
@@ -126,11 +126,7 @@ const addSceneTest = (component: React$Element, options: ?string | ?TestType, wr
  * @param options - TestType instance with options for the test. Backwards-compatible with previous version.
  * @param wrapperStyle - don't use this. Instead use the `wrapperStyle` property on `options`
  */
-const addComponentTest = (
-  component: React$Element,
-  options: ?string | ?TestType,
-  wrapperStyle: ?Object = {}
-) => {
+const addComponentTest = (component: React$Element, options: ?string | ?TestType, wrapperStyle: ?Object = {}) => {
   if (R.is(Object, options)) {
     return addTest(component, 'component', options);
   }
