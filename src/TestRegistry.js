@@ -39,8 +39,8 @@ function getName(component: React$Element) {
  * The class name of the component is automatically extracted from the component.
  *
  * @param component - output of a render e.g. <MyComponent param={value}/>.
- * @param title - subtitle for the test e.g. 'with long name'
  * @param type - For Screens/Scenes that should be displayed full-screen, use type='scene'. To display the same component in different states on the same screen, use type='component'.
+ * @param options - for the test
  */
 function addTest(component: React$Element, type: 'scene' | 'component', options: TestType = {}) {
   if (!component || !component.type) {
@@ -105,27 +105,36 @@ function getTests(): Array<RegisteredItemType> {
 }
 
 /**
- * Add test for a scene
+ * Add test for a scene. Will be displayed full-screen in the test UI
+ *
+ * @param component - JSX of component to test
+ * @param options - TestType instance with options for the test. Backwards-compatible with previous version.
+ * @param wrapperStyle - don't use this. Instead use the `wrapperStyle` property on `options`
  */
-const addSceneTest = (component: React$Element, titleOrOptions: ?string | ?TestType, wrapperStyle: ?Object = {}) => {
-  if (R.is(Object, titleOrOptions)) {
-    return addTest(component, 'scene', titleOrOptions);
+const addSceneTest = (component: React$Element, options: ?string | ?TestType, wrapperStyle: ?Object = {}) => {
+  if (R.is(Object, options)) {
+    return addTest(component, 'scene', options);
   }
-  addTest(component, 'scene', {title: titleOrOptions, wrapperStyle});
+  // Backwards compatibility, where options is actually a string
+  addTest(component, 'scene', {title: options, wrapperStyle});
 };
 
 /**
- * Add test for a component
+ * Add test for a component. Will be displayed in a ScrollView along with other tests for this component.
+ *
+ * @param component - JSX of component to test
+ * @param options - TestType instance with options for the test. Backwards-compatible with previous version.
+ * @param wrapperStyle - don't use this. Instead use the `wrapperStyle` property on `options`
  */
 const addComponentTest = (
   component: React$Element,
-  titleOrOptions: ?string | ?TestType,
+  options: ?string | ?TestType,
   wrapperStyle: ?Object = {}
 ) => {
-  if (R.is(Object, titleOrOptions)) {
-    return addTest(component, 'component', titleOrOptions);
+  if (R.is(Object, options)) {
+    return addTest(component, 'component', options);
   }
-  addTest(component, 'component', {title: titleOrOptions, wrapperStyle});
+  addTest(component, 'component', {title: options, wrapperStyle});
 };
 
 /**
