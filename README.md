@@ -100,7 +100,7 @@ Example:
 addSceneTest(<MySceneComponent items={['more','test','data']}/>, 
 { 
   name: 'MySceneComponent',
-  title: Three items', 
+  title: 'Three items', 
   wrapperStyle: {paddingTop: 44, backgroundColor: 'black'}),
 }
 ```
