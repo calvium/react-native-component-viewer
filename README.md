@@ -72,29 +72,37 @@ class MySceneComponent extends React.Component {
 addTestScene(<MySceneComponent
   myProp1={'test data'}
   myProp2={['more','test','data']}
-/>);
+/>,
+{name: 'MySceneComponent'},
+);
 ```
 
-You can add the same component several times with different data. To do this, add a description as the second parameter to `addTestScene`:
+You can add the same component several times with different data. To do this, add a `title` property to the the second parameter to `addTestScene`:
 
 ```js
-addSceneTest(<MySceneComponent items={[]}/>, 'Empty');
+addSceneTest(<MySceneComponent items={[]}/>, {name: 'MySceneComponent', title: 'Empty'});
 
-addSceneTest(<MySceneComponent items={['more','test','data']}/>, 'Three items');
+addSceneTest(<MySceneComponent items={['more','test','data']}/>, {name: 'MySceneComponent', title: 'Three items'});
 ```
 
 ## Making space for header and footer bars
 
 In real app, your screens will normally have a header (and perhaps a footer). This means your actual component has a smaller space to render in.
 
-To support this there's a third optional argument to `addTestScene` called `wrapperStyle`. This is a standard React Native View style.
+To support this there's an optional property `wrapperStyle` on the second parameter to `addSceneTest`. This is a standard React Native View style.
+
 Use the `padding` properties to adjust the rendering inset to your scene. You may want to store the style somewhere central in your app so
 you don't have to type it out each time you use `addTestScene`. 
 
 Example:
 
 ```js
-addSceneTest(<MySceneComponent items={['more','test','data']}/>, 'Three items', {paddingTop: 44, backgroundColor: 'black'});
+addSceneTest(<MySceneComponent items={['more','test','data']}/>, 
+{ 
+  name: 'MySceneComponent',
+  title: Three items', 
+  wrapperStyle: {paddingTop: 44, backgroundColor: 'black'}),
+}
 ```
 
 # Registering Test Components
@@ -116,8 +124,11 @@ import {addComponentTest} from 'react-native-component-viewer'; // <-- Add this 
 const wrapperStyle = {width: 200}; // style of container holding the component - useful for constraining to different sizes
 addComponentTest(
       <Button type={'large'} title={'Button title'} />,
-      `Large Button`, // Title
-      wrapperStyle,
+      {
+       name: 'Button',
+       title: 'Large button',
+	    wrapperStyle,
+	   }
     )
 ```
 
