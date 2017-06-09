@@ -10,6 +10,7 @@ export type RegisteredItemType = {|
   component: React$Element, // the actual element itself
   type: 'scene' | 'component',
   states?: Array<RegisteredItemType>,
+  wrapperStyle: ?Object,
 |};
 
 /**
