@@ -107,7 +107,7 @@ addSceneTest(<MySceneComponent items={['more','test','data']}/>,
 
 # Registering Test Components
 
-When testing acomponent such as a Button, you'll most likely want to view all the possible states of the button on a single screen
+When testing a component such as a Button, you'll most likely want to view all the possible states of the button on a single screen
 
 For example:
 
@@ -149,7 +149,7 @@ export default connect(
 	}),
 	dispatch => ({
 		//.. mapDispatchToProps
-	})(MyComponent);
+	}))(MyComponent);
 	
 // we export the connected component, but pass the
 // unconnected component to addTestScene

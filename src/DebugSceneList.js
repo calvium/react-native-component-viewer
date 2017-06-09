@@ -23,7 +23,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   componentWrapper: {
-    marginHorizontal: 20,
     alignSelf: 'stretch',
   },
   componentTitle: {
@@ -90,8 +89,8 @@ class DebugSceneList extends Component {
             return [
               <Text key={`${i.name}_${i.title}_title`} style={styles.componentTitle}>{i.title}</Text>,
               <View key={`${i.name}_${i.title}_component`} style={[styles.componentWrapper, i.wrapperStyle]}>
-              {i.component}
-            </View>]
+                {i.component}
+              </View>];
           })}
         </ScrollView>
       </View>
