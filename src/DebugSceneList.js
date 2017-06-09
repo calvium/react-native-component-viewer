@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 
 import {View, StyleSheet, Text, TouchableHighlight, Alert, ScrollView} from 'react-native';
-import {getTests, TestType} from './TestRegistry';
+import {getTests} from './TestRegistry';
 import type {RegisteredItemType} from './TestRegistry';
 import SearchableList from './SearchableList';
 
