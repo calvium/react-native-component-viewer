@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 
-import {View, StyleSheet, Text, TouchableHighlight, Alert, ScrollView, AsyncStorage} from 'react-native';
+import {View, StyleSheet, Text, TouchableHighlight, ScrollView, AsyncStorage} from 'react-native';
 import {getTests} from './TestRegistry';
 import type {RegisteredItemType} from './TestRegistry';
 import SearchableList from './SearchableList';
@@ -106,14 +106,12 @@ class DebugSceneList extends Component {
     return (
       <View key={'modal1'} style={[styles.selectedComponentWrapper, selectedItem && selectedItem.wrapperStyle]}>
         <ScrollView contentContainerStyle={styles.componentModalScrollView} automaticallyAdjustContentInsets={true}>
-          {selectedItem.states.map((i: RegisteredItemType) => {
-            return [
+          {selectedItem.states.map((i: RegisteredItemType) => [
               <Text key={`${i.name}_${i.title}_title`} style={styles.componentTitle}>{i.title}</Text>,
               <View key={`${i.name}_${i.title}_component`} style={[styles.componentWrapper, i.wrapperStyle]}>
                 {i.component}
               </View>,
-            ];
-          })}
+            ])}
         </ScrollView>
       </View>
     );

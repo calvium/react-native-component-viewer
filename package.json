@@ -28,5 +28,8 @@
   "peerDependencies": {
     "react": "*",
     "react-native": "*"
+  },
+  "devDependencies": {
+    "eslint-config-calvium": "^0.3.0"
   }
 }

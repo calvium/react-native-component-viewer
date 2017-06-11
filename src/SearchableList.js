@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     flex: 1,
-    borderRadius: Platform.OS == 'ios' ? 10 : 0,
+    borderRadius: Platform.OS === 'ios' ? 10 : 0,
     backgroundColor: colors.whiteColor,
     alignSelf: 'stretch',
     borderWidth: 1,
@@ -89,7 +89,7 @@ class SearchableList extends Component {
     this.renderRow = data => <SceneRow onPress={() => this.props.onPressRow(data)} {...data} />;
 
     // type sets state - state change performs actual searching!
-    this.handleSearchInputChanged = filter => this.setState({search:filter});
+    this.handleSearchInputChanged = filter => this.setState({search: filter});
 
     /**
      * Search - lowercase everything. Search on name and title
