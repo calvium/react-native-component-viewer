@@ -107,11 +107,11 @@ class DebugSceneList extends Component {
       <View key={'modal1'} style={[styles.selectedComponentWrapper, selectedItem && selectedItem.wrapperStyle]}>
         <ScrollView contentContainerStyle={styles.componentModalScrollView} automaticallyAdjustContentInsets={true}>
           {selectedItem.states.map((i: RegisteredItemType) => [
-              <Text key={`${i.name}_${i.title}_title`} style={styles.componentTitle}>{i.title}</Text>,
-              <View key={`${i.name}_${i.title}_component`} style={[styles.componentWrapper, i.wrapperStyle]}>
-                {i.component}
-              </View>,
-            ])}
+            <Text key={`${i.name}_${i.title}_title`} style={styles.componentTitle}>{i.title}</Text>,
+            <View key={`${i.name}_${i.title}_component`} style={[styles.componentWrapper, i.wrapperStyle]}>
+              {i.component}
+            </View>,
+          ])}
         </ScrollView>
       </View>
     );

@@ -105,7 +105,6 @@ class SearchableList extends Component {
     };
   }
 
-
   componentDidMount() {
     // Attempt to get around issue where sometimes the list appears blank before you scroll it
     setTimeout(() => {
