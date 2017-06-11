@@ -23,7 +23,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   componentWrapper: {
-    marginHorizontal: 20,
     alignSelf: 'stretch',
   },
   componentTitle: {
@@ -93,7 +92,7 @@ class DebugSceneList extends Component {
   renderSceneModal() {
     return (
       <View
-        key={'modal1'}
+        key={'component-viewer-modal'}
         style={[styles.selectedComponentWrapper, this.state.selectedItem && this.state.selectedItem.wrapperStyle]}
       >
         {this.state.selectedItem.component}
@@ -104,7 +103,7 @@ class DebugSceneList extends Component {
   renderComponentModal() {
     const {selectedItem}: {selectedItem: RegisteredItemType} = this.state;
     return (
-      <View key={'modal1'} style={[styles.selectedComponentWrapper, selectedItem && selectedItem.wrapperStyle]}>
+      <View key={'component-viewer-modal'} style={[styles.selectedComponentWrapper, selectedItem && selectedItem.wrapperStyle]}>
         <ScrollView contentContainerStyle={styles.componentModalScrollView} automaticallyAdjustContentInsets={true}>
           {selectedItem.states.map((i: RegisteredItemType) => [
             <Text key={`${i.name}_${i.title}_title`} style={styles.componentTitle}>{i.title}</Text>,
@@ -120,7 +119,7 @@ class DebugSceneList extends Component {
   renderModal() {
     return [
       this.state.selectedItem.type === 'scene' ? this.renderSceneModal() : this.renderComponentModal(),
-      <TouchableHighlight key={'modal2'} style={styles.closeButton} onPress={this.onHideScene}>
+      <TouchableHighlight key={'component-viewer-close-button'} style={styles.closeButton} onPress={this.onHideScene}>
         <Text style={styles.closeButtonText}>Close</Text>
       </TouchableHighlight>,
     ];
