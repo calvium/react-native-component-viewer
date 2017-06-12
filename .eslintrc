@@ -1,0 +1,5 @@
+// Calvium React Native Project Default ESLint Settings.
+// To have these appear in-line in WebStorm/PhpStorm go to Settings / Languages & Frameworks / JavaScript / Code Quality Tools / ESLint / enable
+{
+  "extends": "calvium"
+}

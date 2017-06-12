@@ -24,7 +24,7 @@ This library does not assume any specific navigation library is in use. As a res
 
 Here's how to use it in react-native-router-flux:
 
-- First, add the Scene to your list of scenes at the root of your app:
+- First, add the `ComponentViewer` component to your list of scenes at the root of your app:
 
 ```js
 import {ComponentViewer} from 'react-native-component-viewer';
@@ -134,7 +134,7 @@ addComponentTest(
 
 Multiple tests for a single component appear in the ComponentViewer list as a single entry. Tapping the entry displays a ScrollView containing all your tests.
  
-## Usage with Redux
+# Usage with Redux
 
 If you're using the `react-redux` `connect` method, make sure you pass the 'unconnected' version of the component to `addTestScene`, e.g.:
 
@@ -158,6 +158,11 @@ addTestScene(<MyComponent {...testData}/>);
 
 This way you can make sure your test scenes are completely independent of the Redux state.
 
+# Other options
+
+By default the list will save and restore your last search term via `AsyncStorage`. This is useful if you have many registered tests, as it saves you from having to type the search term every time you reload. 
+
+Saving your last search can be disabled by setting the optional `saveSearch` prop to `false` on `ComponentViewer`. The default is `true`.
 
 
 

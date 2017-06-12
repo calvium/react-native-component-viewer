@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     flex: 1,
-    borderRadius: Platform.OS == 'ios' ? 10 : 0,
+    borderRadius: Platform.OS === 'ios' ? 10 : 0,
     backgroundColor: colors.whiteColor,
     alignSelf: 'stretch',
     borderWidth: 1,
@@ -83,14 +83,18 @@ class SearchableList extends Component {
       all: allItems,
       ds: ds.cloneWithRows(allItems),
       selectedComponent: undefined,
+      search: this.props.search,
     };
 
     this.renderRow = data => <SceneRow onPress={() => this.props.onPressRow(data)} {...data} />;
 
+    // type sets state - state change performs actual searching!
+    this.handleSearchInputChanged = filter => this.setState({search: filter});
+
     /**
      * Search - lowercase everything. Search on name and title
      */
-    this.search = filter => {
+    this.performSearch = filter => {
       this.props.onSearchChanged(filter);
       const filterLC = String(filter).toLowerCase();
       const filtered = R.filter(
@@ -110,6 +114,16 @@ class SearchableList extends Component {
     }, 150);
   }
 
+  componentWillUpdate(nextProps, nextState) {
+    if (nextProps.search !== this.props.search) {
+      this.setState({search: nextProps.search});
+    }
+
+    if (nextState.search !== this.state.search) {
+      this.performSearch(nextState.search);
+    }
+  }
+
   listView: ListView;
 
   render() {
@@ -122,7 +136,8 @@ class SearchableList extends Component {
             autoCorrect={false}
             enablesReturnKeyAutomatically={true}
             style={styles.searchInput}
-            onChangeText={this.search}
+            value={this.state.search}
+            onChangeText={this.handleSearchInputChanged}
             clearButtonMode={'while-editing'}
           />
           <TouchableHighlight underlayColor={colors.whiteColor} onPress={this.props.onClose} style={styles.doneButton}>
@@ -149,9 +164,12 @@ SearchableList.defaultProps = {
   onPressRow: () => {},
   onClose: () => {},
   onSearchChanged: () => {},
+  search: '',
 };
 
 SearchableList.propTypes = {
+  search: PropTypes.string,
+  onSearchChanged: PropTypes.func,
   onPressRow: PropTypes.func,
   onClose: PropTypes.func,
   items: PropTypes.arrayOf(

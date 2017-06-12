@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React from 'react';
 import * as R from 'ramda';
 
@@ -7,7 +8,7 @@ import * as R from 'ramda';
 export type RegisteredItemType = {|
   name: string, // extracted from the component's name, or provided by user
   title: ?string, // title used when scene is used several times with different test data
-  component: React$Element, // the actual element itself
+  component: React.Element<any>, // the actual element itself
   type: 'scene' | 'component',
   states?: Array<RegisteredItemType>,
   wrapperStyle: ?Object,
@@ -28,7 +29,7 @@ const registeredItems: {|[string]: RegisteredItemType|} = {};
  * Get the name of the component. Note only works in debug builds as production builds minify JS code and remove names
  * Stateless components have .name, classes have .displayName.
  */
-function getName(component: React$Element) {
+function getName(component: React.Element<any>) {
   if (!component) {
     return '(no component)';
   }
@@ -43,7 +44,7 @@ function getName(component: React$Element) {
  * @param type - For Screens/Scenes that should be displayed full-screen, use type='scene'. To display the same component in different states on the same screen, use type='component'.
  * @param options - for the test
  */
-function addTest(component: React$Element, type: 'scene' | 'component', options: TestType = {}) {
+function addTest(component: React.Element<any>, type: 'scene' | 'component', options: TestType = {}) {
   if (!component || !component.type) {
     return;
   }
@@ -63,7 +64,7 @@ function addTest(component: React$Element, type: 'scene' | 'component', options:
 
         if (existing) {
           if (!existing.states) {
-            console.log(`Probably trying to register a component on something previously registered as a scene`);
+            console.log('Probably trying to register a component on something previously registered as a scene');
             return;
           }
           existing.states = R.uniqBy(i => i.title, [...existing.states, itemDetails]); // remove dupes, based on title
@@ -112,9 +113,10 @@ function getTests(): Array<RegisteredItemType> {
  * @param options - TestType instance with options for the test. Backwards-compatible with previous version.
  * @param wrapperStyle - don't use this. Instead use the `wrapperStyle` property on `options`
  */
-const addSceneTest = (component: React$Element, options: ?string | ?TestType, wrapperStyle: ?Object = {}) => {
+const addSceneTest = (component: React.Element<any>, options: ?string | ?TestType, wrapperStyle: ?Object = {}) => {
   if (R.is(Object, options)) {
-    return addTest(component, 'scene', options);
+    addTest(component, 'scene', options);
+    return;
   }
   // Backwards compatibility, where options is actually a string
   addTest(component, 'scene', {title: options, wrapperStyle});
@@ -127,9 +129,10 @@ const addSceneTest = (component: React$Element, options: ?string | ?TestType, wr
  * @param options - TestType instance with options for the test. Backwards-compatible with previous version.
  * @param wrapperStyle - don't use this. Instead use the `wrapperStyle` property on `options`
  */
-const addComponentTest = (component: React$Element, options: ?string | ?TestType, wrapperStyle: ?Object = {}) => {
+const addComponentTest = (component: React.Element<any>, options: ?string | ?TestType, wrapperStyle: ?Object = {}) => {
   if (R.is(Object, options)) {
-    return addTest(component, 'component', options);
+    addTest(component, 'component', options);
+    return;
   }
   addTest(component, 'component', {title: options, wrapperStyle});
 };
