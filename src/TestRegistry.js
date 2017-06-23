@@ -80,6 +80,7 @@ function addTest(component: React.Element<any>, type: 'scene' | 'component', opt
             states: [itemDetails],
             title,
             name,
+            key,
           };
         }
 
