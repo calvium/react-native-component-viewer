@@ -25,6 +25,8 @@ export type TestType = {
 
 const registeredItems: {|[string]: RegisteredItemType|} = {};
 
+const registeredListeners: Array<(ItemType) => void> = [];
+
 /**
  * Get the name of the component. Note only works in debug builds as production builds minify JS code and remove names
  * Stateless components have .name, classes have .displayName.
@@ -52,14 +54,14 @@ function addTest(component: React.Element<any>, type: 'scene' | 'component', opt
   const name = options.name || getName(component);
   const title = options.title;
 
-  const itemDetails = {...options, component, type, name};
+  let itemDetails = {...options, component, type, name};
+  const key = keyForTest(type, itemDetails);
+  itemDetails = {...itemDetails, key}; // add key back in
 
   switch (type) {
     // For each component, we store an array of different 'views' onto the component
     case 'component':
       {
-        const key = name;
-
         let existing: ?RegisteredItemType = registeredItems[key];
 
         if (existing) {
@@ -67,7 +69,8 @@ function addTest(component: React.Element<any>, type: 'scene' | 'component', opt
             console.log('Probably trying to register a component on something previously registered as a scene');
             return;
           }
-          existing.states = R.uniqBy(i => i.title, [...existing.states, itemDetails]); // remove dupes, based on title
+          // uniqBy retains FIRST item when there are dupes - so put our NEW one first.
+          existing.states = R.uniqBy(i => i.title, [itemDetails, ...existing.states]); // remove dupes, based on title
         } else {
           // Register as empty placeholder so it can be rendered easily in the list
           existing = {
@@ -77,6 +80,7 @@ function addTest(component: React.Element<any>, type: 'scene' | 'component', opt
             states: [itemDetails],
             title,
             name,
+            key,
           };
         }
 
@@ -88,14 +92,53 @@ function addTest(component: React.Element<any>, type: 'scene' | 'component', opt
     // For scenes, we have a single item
     case 'scene':
       {
-        const key = title || name;
         if (registeredItems[key]) {
-          console.log(`Scene already registered with title=${key}. Overwriting..`);
+          console.log(`Scene already registered as '${key}'. Overwriting..`);
         }
         registeredItems[key] = itemDetails;
       }
       break;
     default:
+  }
+
+  // Notify listeners
+  notifyListeners(key);
+}
+
+let listenerDebounceId = null;
+let listenerDebouceEditListKeys = [];
+
+function notifyListeners(key: string) {
+  listenerDebouceEditListKeys.push(key);
+  if (listenerDebounceId) {
+    clearTimeout(listenerDebounceId);
+  }
+  listenerDebounceId = setTimeout(() => {
+    const list = [...listenerDebouceEditListKeys]; // copy list!
+    listenerDebouceEditListKeys = [];
+    clearTimeout(listenerDebounceId);
+    listenerDebounceId = null;
+
+    console.log(`.. notifying react-native-component-viewer test updated.. ${JSON.stringify(list)}`);
+    R.forEach(r => {
+      try {
+        r(list);
+      } catch (ignored) {
+      }
+    }, registeredListeners);
+  }, 250);
+}
+
+/**
+ * Uses as keys into registeredItems
+ */
+function keyForTest(type: string, details: TestType) {
+  switch (type) {
+    case 'component':
+      return details.name;
+    case 'scene':
+    default:
+      return details.title ? `${details.name}_${details.title}` : details.name;
   }
 }
 
@@ -104,6 +147,14 @@ function addTest(component: React.Element<any>, type: 'scene' | 'component', opt
  */
 function getTests(): Array<RegisteredItemType> {
   return R.sort(({name: name1}, {name: name2}) => (name1 > name2 ? 1 : -1), R.values(registeredItems));
+}
+
+/**
+ * Returns a specific test. Will get the *latest* test - means that hot-reloaded tests
+ * update as expected
+ */
+function getTest(key: string) {
+  return registeredItems[key];
 }
 
 /**
@@ -137,6 +188,24 @@ const addComponentTest = (component: React.Element<any>, options: ?string | ?Tes
   addTest(component, 'component', {title: options, wrapperStyle});
 };
 
+function addUpdateListener(listener: Array<TestType> => void) {
+  const index = registeredListeners.indexOf(listener);
+  if (index === -1) {
+    registeredListeners.push(listener);
+  } else {
+    console.log(`.. removeUpdateListener called with listener that's already added`);
+  }
+}
+
+function removeUpdateListener(listener: Array<TestType> => void) {
+  const index = registeredListeners.indexOf(listener);
+  if (index !== -1) {
+    registeredListeners.splice(index, 1);
+  } else {
+    console.log(`.. removeUpdateListener called with listener that's not been added`);
+  }
+}
+
 /**
  * @deprecated - use addSceneTest
  */
@@ -147,4 +216,13 @@ const addTestScene = addSceneTest;
  */
 const getTestScenes = getTests;
 
-export {addSceneTest, addComponentTest, addTestScene, getTests, getTestScenes};
+export {
+  addSceneTest,
+  addComponentTest,
+  addTestScene,
+  getTests,
+  getTest,
+  getTestScenes,
+  addUpdateListener,
+  removeUpdateListener,
+};

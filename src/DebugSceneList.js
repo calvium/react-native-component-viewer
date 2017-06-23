@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 
 import {View, StyleSheet, Text, TouchableHighlight, ScrollView, AsyncStorage} from 'react-native';
-import {getTests} from './TestRegistry';
+import {getTests, getTest, addUpdateListener, removeUpdateListener} from './TestRegistry';
 import type {RegisteredItemType} from './TestRegistry';
 import SearchableList from './SearchableList';
 
@@ -60,15 +60,23 @@ class DebugSceneList extends Component {
     this.state = {
       all: allScenes,
       modalVisible: false,
+      selectedItemKey: undefined,
       selectedItem: undefined,
       search: '', // loaded in componentDidMount
     };
 
-    this.onHideScene = () => this.setState({modalVisible: false, selectedItem: undefined});
+    this.onHideScene = () => this.setState({modalVisible: false, selectedItem: undefined, selectedItemKey: undefined});
 
+    // To allow hot-reloaded components to load, we need to grab
+    // the item from TestRegistry at the point we tap it
     this.onPressRow = (data: RegisteredItemType) => {
+      const test = getTest(data.key);
+      if (!test) {
+        return;
+      }
       this.setState({
         modalVisible: true,
+        selectedItemKey: data.key,
         selectedItem: data,
       });
     };
@@ -80,6 +88,22 @@ class DebugSceneList extends Component {
         AsyncStorage.setItem(SAVED_SEARCH_KEY, search);
       }
     };
+
+    this.handleTestsUpdated = list => {
+      let selectedItem = this.state.selectedItem;
+      const currentKey = this.state.selectedItemKey;
+      if (list.indexOf(currentKey) !== -1) {
+        console.log(`reloading ${currentKey}`);
+        selectedItem = getTest(this.state.selectedItemKey);
+      }
+
+      this.setState({
+        all: getTests(),
+        selectedItem,
+      });
+    };
+
+    this.handleListRef = ref => (this._list = ref);
   }
 
   componentDidMount() {
@@ -87,6 +111,12 @@ class DebugSceneList extends Component {
     if (this.props.saveSearch) {
       AsyncStorage.getItem(SAVED_SEARCH_KEY).then(search => this.setState({search: search || ''}));
     }
+
+    addUpdateListener(this.handleTestsUpdated);
+  }
+
+  componentWillUnmount() {
+    removeUpdateListener(this.handleTestsUpdated);
   }
 
   renderSceneModal() {
@@ -103,7 +133,10 @@ class DebugSceneList extends Component {
   renderComponentModal() {
     const {selectedItem}: {selectedItem: RegisteredItemType} = this.state;
     return (
-      <View key={'component-viewer-modal'} style={[styles.selectedComponentWrapper, selectedItem && selectedItem.wrapperStyle]}>
+      <View
+        key={'component-viewer-modal'}
+        style={[styles.selectedComponentWrapper, selectedItem && selectedItem.wrapperStyle]}
+      >
         <ScrollView contentContainerStyle={styles.componentModalScrollView} automaticallyAdjustContentInsets={true}>
           {selectedItem.states.map((i: RegisteredItemType) => [
             <Text key={`${i.name}_${i.title}_title`} style={styles.componentTitle}>{i.title}</Text>,
@@ -129,6 +162,7 @@ class DebugSceneList extends Component {
     return (
       <View style={styles.container}>
         <SearchableList
+          ref={this.handleListRef}
           search={this.state.search}
           onClose={this.props.onClose}
           onPressRow={this.onPressRow}
