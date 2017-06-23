@@ -122,6 +122,13 @@ class SearchableList extends Component {
     if (nextState.search !== this.state.search) {
       this.performSearch(nextState.search);
     }
+
+    if (nextProps.items !== this.state.all) {
+      this.setState({all: nextProps.items}, ()=>{
+        console.log(`SearchableList: items changed`);
+        this.performSearch(nextState.search);
+      });
+    }
   }
 
   listView: ListView;
