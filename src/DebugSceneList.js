@@ -20,7 +20,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.lightGrayColor,
   },
   componentModalScrollView: {
+    marginTop: 20,
     alignItems: 'center',
+    marginBottom: 400,
   },
   componentWrapper: {
     alignSelf: 'stretch',
