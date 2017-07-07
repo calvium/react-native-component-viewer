@@ -1,6 +1,6 @@
 # react-native-component-viewer
 A searchable list of components or scenes in your app. Handy for tweaking layout or design without needing to navigate your
-app to get there. 
+app to get there.
 
 Especially useful for accessing screens that are hard to get to, or for testing the design of screen in specific difficult-to-test situations (e.g. server failure).
 
@@ -85,6 +85,29 @@ addSceneTest(<MySceneComponent items={[]}/>, {name: 'MySceneComponent', title: '
 addSceneTest(<MySceneComponent items={['more','test','data']}/>, {name: 'MySceneComponent', title: 'Three items'});
 ```
 
+# The component parameter
+
+When you add a scene or component test, you can either pass in a rendered component, like either of the following:
+
+```js
+addSceneTest(<MySceneComponent />, {name: 'MySceneComponent'});
+addComponentTest(<MyComponent />, {name: 'MyComponent'});
+```
+
+or you can pass in an unrendered component, which Component Viewer will render for you. For example, with functional components:
+
+```js
+addSceneTest(({closeThisTest}) => <MySceneComponent onClose={closeThisTest} />, {name: 'MySceneComponent'});
+addComponentTest(({closeThisTest}) => <MyComponent onClose={closeThisTest} />, {name: 'MyComponent'});
+```
+
+If you pass in an anonymous functional component, you should always supply an explicit `name` option as above, because Component Viewer will not be able to reliably find out the name of your component.
+
+If you pass in an unrendered component, Component Viewer will render it with the following props:
+ * closeThisTest: a 0-argument function; when called it closes the current test.
+
+Note that the list of props that Component Viewer will supply to components may be added to in future, so it's best to use a functional component that explicitly picks out the ones you want to use.
+
 ## Making space for header and footer bars
 
 In real app, your screens will normally have a header (and perhaps a footer). This means your actual component has a smaller space to render in.
@@ -92,18 +115,47 @@ In real app, your screens will normally have a header (and perhaps a footer). Th
 To support this there's an optional property `wrapperStyle` on the second parameter to `addSceneTest`. This is a standard React Native View style.
 
 Use the `padding` properties to adjust the rendering inset to your scene. You may want to store the style somewhere central in your app so
-you don't have to type it out each time you use `addTestScene`. 
+you don't have to type it out each time you use `addTestScene`.
 
 Example:
 
 ```js
-addSceneTest(<MySceneComponent items={['more','test','data']}/>, 
-{ 
+addSceneTest(<MySceneComponent items={['more','test','data']}/>,
+{
   name: 'MySceneComponent',
-  title: 'Three items', 
+  title: 'Three items',
   wrapperStyle: {paddingTop: 44, backgroundColor: 'black'}),
 }
 ```
+
+## Testing modals
+
+If you have are testing a component with a <Modal> on it, the modal may cover the 'Close' button and make it impossible to go back to the list. If your modal has its own close button then you can work around this by:
+ * registering your modal as a scene using addSceneTest, and
+ * calling the `closeThisTest` callback from your modal's close button.
+
+For example, if you write:
+
+```js
+import React from 'react';
+import {addSceneTest} from 'react-native-component-viewer';
+import {Modal, Text, View, Button} from 'react-native';
+
+const MyModal = ({onRequestClose, visible}) => ```
+  <Modal visible={visible} onRequestClose={onRequestClose}>
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff'}}>
+      <Text>This is a modal pop-up!</Text>
+      <Button title="Close this modal" onPress={onRequestClose} />
+    </View>
+  </Modal>
+);
+
+addSceneTest(({closeThisTest}) => <MyModal onRequestClose={closeThisTest} visible />, {
+  name: 'MyModal',
+});
+```
+
+then the 'Close this modal' button inside the modal will take you back to the menu.
 
 # Registering Test Components
 
@@ -133,14 +185,15 @@ addComponentTest(
 ```
 
 Multiple tests for a single component appear in the ComponentViewer list as a single entry. Tapping the entry displays a ScrollView containing all your tests.
- 
+
+
 # Usage with Redux
 
 If you're using the `react-redux` `connect` method, make sure you pass the 'unconnected' version of the component to `addTestScene`, e.g.:
 
 ```js
 class MyComponent extends React.Component {
-	//... 
+	//...
 }
 
 export default connect(
@@ -150,7 +203,7 @@ export default connect(
 	dispatch => ({
 		//.. mapDispatchToProps
 	}))(MyComponent);
-	
+
 // we export the connected component, but pass the
 // unconnected component to addTestScene
 addTestScene(<MyComponent {...testData}/>);
@@ -160,13 +213,6 @@ This way you can make sure your test scenes are completely independent of the Re
 
 # Other options
 
-By default the list will save and restore your last search term via `AsyncStorage`. This is useful if you have many registered tests, as it saves you from having to type the search term every time you reload. 
+By default the list will save and restore your last search term via `AsyncStorage`. This is useful if you have many registered tests, as it saves you from having to type the search term every time you reload.
 
 Saving your last search can be disabled by setting the optional `saveSearch` prop to `false` on `ComponentViewer`. The default is `true`.
-
-
-
-
-
-
-

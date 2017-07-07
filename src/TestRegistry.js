@@ -47,7 +47,7 @@ function getName(component: React.Element<any>) {
  * @param options - for the test
  */
 function addTest(component: React.Element<any>, type: 'scene' | 'component', options: TestType = {}) {
-  if (!component || !component.type) {
+  if (!component || (!component.type && !component instanceof Function)) {
     return;
   }
   // Use provided name, or extract from component if not given

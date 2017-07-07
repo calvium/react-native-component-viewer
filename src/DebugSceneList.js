@@ -22,6 +22,9 @@ const styles = StyleSheet.create({
   componentModalScrollView: {
     alignItems: 'center',
   },
+  componentModalSpacer: {
+    height: 30,
+  },
   componentWrapper: {
     alignSelf: 'stretch',
   },
@@ -119,13 +122,25 @@ class DebugSceneList extends Component {
     removeUpdateListener(this.handleTestsUpdated);
   }
 
+  renderWithProps(Component) {
+    // If we're passed a rendered component, use it as-is.
+    if (!(Component instanceof Function)) {
+      return Component;
+    }
+    // If we're passed an unrendered component, render it.
+    // This list of props might grow in future.
+    return (
+      <Component closeThisTest={this.onHideScene} />
+    );
+  }
+
   renderSceneModal() {
     return (
       <View
         key={'component-viewer-modal'}
         style={[styles.selectedComponentWrapper, this.state.selectedItem && this.state.selectedItem.wrapperStyle]}
       >
-        {this.state.selectedItem.component}
+        {this.renderWithProps(this.state.selectedItem.component)}
       </View>
     );
   }
@@ -141,9 +156,10 @@ class DebugSceneList extends Component {
           {selectedItem.states.map((i: RegisteredItemType) => [
             <Text key={`${i.name}_${i.title}_title`} style={styles.componentTitle}>{i.title}</Text>,
             <View key={`${i.name}_${i.title}_component`} style={[styles.componentWrapper, i.wrapperStyle]}>
-              {i.component}
+              {this.renderWithProps(i.component)}
             </View>,
           ])}
+          <View style={styles.componentModalSpacer} />
         </ScrollView>
       </View>
     );
