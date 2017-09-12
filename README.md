@@ -130,7 +130,7 @@ addSceneTest(<MySceneComponent items={['more','test','data']}/>,
 
 ## Testing modals
 
-If you have are testing a component with a <Modal> on it, the modal may cover the 'Close' button and make it impossible to go back to the list. If your modal has its own close button then you can work around this by:
+If you are testing a component with a `<Modal>` on it, the modal may cover the 'Close' button and make it impossible to go back to the list. If your modal has its own close button then you can work around this by:
  * registering your modal as a scene using addSceneTest, and
  * calling the `closeThisTest` callback from your modal's close button.
 
