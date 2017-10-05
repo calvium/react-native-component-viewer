@@ -6,6 +6,8 @@ Especially useful for accessing screens that are hard to get to, or for testing 
 
 ![animated gif](docs/Demo.gif)
 
+Requires react-native >= 0.43.0. For older versions of RN, please use version 0.4.0 or below.
+
 # Installation
 
 This is a pure JavaScript library, so there's no need to run `react-native link` or manually add any frameworks or libraries.
