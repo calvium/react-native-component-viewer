@@ -119,12 +119,17 @@ function notifyListeners(key: string) {
     clearTimeout(listenerDebounceId);
     listenerDebounceId = null;
 
-    console.log(`.. notifying react-native-component-viewer test updated.. ${JSON.stringify(list)}`);
+    if (console.groupCollapsed) { // Check if groupCollapsed is available
+      console.groupCollapsed();
+      list.forEach(item => console.log(JSON.stringify(item)));
+      console.groupEnd();
+    } else {
+      console.log(`.. notifying react-native-component-viewer test updated.. ${JSON.stringify(list)}`);
+    }
     R.forEach(r => {
       try {
         r(list);
-      } catch (ignored) {
-      }
+      } catch (ignored) {}
     }, registeredListeners);
   }, 250);
 }
@@ -188,7 +193,7 @@ const addComponentTest = (component: React.Element<any>, options: ?string | ?Tes
   addTest(component, 'component', {title: options, wrapperStyle});
 };
 
-function addUpdateListener(listener: Array<TestType> => void) {
+function addUpdateListener(listener: (Array<TestType>) => void) {
   const index = registeredListeners.indexOf(listener);
   if (index === -1) {
     registeredListeners.push(listener);
@@ -197,7 +202,7 @@ function addUpdateListener(listener: Array<TestType> => void) {
   }
 }
 
-function removeUpdateListener(listener: Array<TestType> => void) {
+function removeUpdateListener(listener: (Array<TestType>) => void) {
   const index = registeredListeners.indexOf(listener);
   if (index !== -1) {
     registeredListeners.splice(index, 1);
