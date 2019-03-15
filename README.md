@@ -24,7 +24,7 @@ This library does not assume any specific navigation library is in use. As a res
 
 ## Usage in react-navigation
 
-Here's how to use it in react-native-router-flux:
+Here's how to use it with react-navigation:
 
 - First, add a wrapped `ComponentViewer` component to your list of scenes in a navigator 
 
@@ -66,7 +66,7 @@ const DebugStack = createStackNavigator(
 ```
 The `onClose` prop above runs the function that closes the list UI when the `Done` button is pressed on the UI.
 
-Then you can navigate to it as any other screen
+Then you can navigate to it as any other screen:
 
 ```js
 this.props.navigation.navigate('ComponentViewer');
