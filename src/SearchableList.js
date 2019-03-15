@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
-import {View, StyleSheet, Text, ListView, TextInput, TouchableHighlight, Platform} from 'react-native';
+import {View, StyleSheet, Text, FlatList, TextInput, TouchableHighlight, Platform} from 'react-native';
 
 import * as R from 'ramda';
 import {colors} from './theme';
@@ -77,17 +77,15 @@ class SearchableList extends Component {
   constructor(props) {
     super(props);
 
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-
     const allItems = this.props.items;
     this.state = {
       all: allItems,
-      ds: ds.cloneWithRows(allItems),
+      ds: allItems,
       selectedComponent: undefined,
       search: this.props.search,
     };
 
-    this.renderRow = data => <SceneRow onPress={() => this.props.onPressRow(data)} {...data} />;
+    this.renderRow = ({item}) => <SceneRow onPress={() => this.props.onPressRow(item)} {...item} />;
 
     // type sets state - state change performs actual searching!
     this.handleSearchInputChanged = filter => this.setState({search: filter});
@@ -102,17 +100,8 @@ class SearchableList extends Component {
         data => `${data.name} ${data.title}`.toLowerCase().indexOf(filterLC) !== -1,
         this.state.all
       );
-      this.setState({ds: this.state.ds.cloneWithRows(filtered)});
+      this.setState({ds: filtered});
     };
-  }
-
-  componentDidMount() {
-    // Attempt to get around issue where sometimes the list appears blank before you scroll it
-    setTimeout(() => {
-      if (this.listView) {
-        this.listView.scrollTo({x: 0, y: 1, animated: true});
-      }
-    }, 150);
   }
 
   componentWillUpdate(nextProps, nextState) {
@@ -132,7 +121,11 @@ class SearchableList extends Component {
     }
   }
 
-  listView: ListView;
+  listView: FlatList;
+
+  renderEmpty() {
+    return <Text style={styles.noItemsText}>No items</Text>;
+  }
 
   render() {
     return (
@@ -152,16 +145,14 @@ class SearchableList extends Component {
             <Text style={styles.doneButtonText}>Done</Text>
           </TouchableHighlight>
         </View>
-        {this.state.ds.getRowCount()
-          ? <ListView
-              ref={r => (this.listView = r)}
-              enableEmptySections
-              key={'list'}
-              style={{flex: 1}}
-              dataSource={this.state.ds}
-              renderRow={this.renderRow}
-            />
-          : <Text style={styles.noItemsText}>No items</Text>}
+        <FlatList
+          ref={r => (this.listView = r)}
+          key={'list'}
+          style={{flex: 1}}
+          data={this.state.ds}
+          renderItem={this.renderRow}
+          ListEmptyComponent={this.renderEmpty}
+        />
       </View>
     );
   }
