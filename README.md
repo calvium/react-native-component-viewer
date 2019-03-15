@@ -22,6 +22,58 @@ npm i -S react-native-component-viewer
 
 This library does not assume any specific navigation library is in use. As a result it can be configured for us with [react-navigation](https://github.com/react-community/react-navigation), [react-native-router-flux](https://github.com/aksonov/react-native-router-flux), and others.
 
+## Usage in react-navigation
+
+Here's how to use it in react-native-router-flux:
+
+- First, add a wrapped `ComponentViewer` component to your list of scenes in a navigator 
+
+```js
+import React from 'react'
+import {ComponentViewer} from 'react-native-component-viewer';
+import {createStackNavigator, NavigationScreenProp, NavigationState} from 'react-navigation';
+
+//.. other imports
+
+const ComponentViewerWrapper = ({navigation}: {navigation: NavigationScreenProp<NavigationState>}): ReactNode => (
+  <SafeAreaView style={{flex: 1}}>
+    <ComponentViewer onClose={() => navigation.goBack(null)} />
+  </SafeAreaView>
+);
+
+const DebugStack = createStackNavigator(
+  {
+    Debug: {
+      screen: DebugScreen,
+      navigationOptions: {
+        title: 'Debug',
+      },
+    },
+    ComponentViewer: {
+      screen: ComponentViewerWrapper,
+      navigationOptions: {
+        title: 'Component Viewer',
+        headerMode: 'none',
+      },
+    },
+  },
+  {
+    initialRouteName: 'Debug',
+    defaultNavigationOptions,
+  }
+);
+
+```
+The `onClose` prop above runs the function that closes the list UI when the `Done` button is pressed on the UI.
+
+Then you can navigate to it as any other screen
+
+```js
+this.props.navigation.navigate('ComponentViewer');
+```
+
+When you first run this you'll get an empty list. You need to manually register each screen with the system (along with their test prop data) before you can start.
+
 ## Usage in react-native-router-flux
 
 Here's how to use it in react-native-router-flux:
@@ -58,6 +110,10 @@ When you first run this you'll get an empty list. You need to manually register 
 
 > Other navigation systems will be similar - just make sure to pass a function that closes the list as the `onClose` property of the `<ComponentViewer>` component. This'll ensure the `Done` button on the list
 returns to your previous page.
+
+
+
+
 
 # Registering test screens
 
