@@ -1,8 +1,9 @@
 declare module 'react-native-component-viewer' {
-  import {ReactElement, Component} from 'react';
+  import {ReactNode, Component} from 'react';
+  import {ViewStyle} from 'react-native';
 
   export interface ComponentViewerPropsType {
-    onClose: (_: undefined) => any;
+    onClose: () => any;
   }
 
   // eslint-disable-next-line react/prefer-stateless-function
@@ -14,18 +15,21 @@ declare module 'react-native-component-viewer' {
   export interface TestInterface {
     name: string;
     title?: string;
-    wrapperStyle: {};
+    wrapperStyle?: ViewStyle | null,
   }
 
+  type TestFunctionType = (props: {closeThisTest: () => void}) => ReactNode<any>;
+  type TestType = TestFunctionType | ReactElement<any>;
+
   function addComponentTest(
-    component: ReactElement<any>,
+    component: TestType,
     options: string | TestInterface | null,
-    wrapperStyle?: {} | null
+    wrapperStyle?: ViewStyle | null,
   ): void;
 
   function addSceneTest(
-    component: ReactElement<any>,
+    component: TestType,
     options: string | TestInterface | null,
-    wrapperStyle?: {} | null
+    wrapperStyle?: ViewStyle | null,
   ): void;
 }
