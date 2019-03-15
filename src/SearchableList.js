@@ -77,8 +77,6 @@ class SearchableList extends Component {
   constructor(props) {
     super(props);
 
-    // const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-
     const allItems = this.props.items;
     this.state = {
       all: allItems,
