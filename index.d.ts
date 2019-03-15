@@ -18,8 +18,8 @@ declare module 'react-native-component-viewer' {
     wrapperStyle?: ViewStyle | null,
   }
 
-  type TestFunctionType = (props: {closeThisTest: () => void}) => ReactNode<any>;
-  type TestType = TestFunctionType | ReactElement<any>;
+  type TestFunctionType = (props: {closeThisTest: () => void}) => ReactNode;
+  type TestType = TestFunctionType | ReactNode;
 
   function addComponentTest(
     component: TestType,
