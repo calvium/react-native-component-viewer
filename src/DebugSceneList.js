@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
-import {View, StyleSheet, Text, TouchableHighlight, ScrollView, AsyncStorage} from 'react-native';
+import {View, StyleSheet, Text, TouchableHighlight, ScrollView} from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import {getTests, getTest, addUpdateListener, removeUpdateListener} from './TestRegistry';
 import type {RegisteredItemType} from './TestRegistry';
 import SearchableList from './SearchableList';
