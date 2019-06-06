@@ -1,6 +1,6 @@
 {
   "name": "react-native-component-viewer",
-  "version": "0.6.2",
+  "version": "0.7.0",
   "description": "A searchable list of components or scenes in your app. Handy for tweaking layout or design without using the app",
   "main": "index.js",
   "scripts": {},
