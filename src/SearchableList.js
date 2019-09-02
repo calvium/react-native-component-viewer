@@ -88,7 +88,9 @@ class SearchableList extends Component {
     this.renderRow = ({item}) => <SceneRow onPress={() => this.props.onPressRow(item)} {...item} />;
 
     // type sets state - state change performs actual searching!
-    this.handleSearchInputChanged = filter => this.setState({search: filter});
+    this.handleSearchInputChanged = filter => this.setState({search: filter}, () => {
+      this.performSearch(this.state.search);
+    });
 
     /**
      * Search - lowercase everything. Search on name and title
@@ -106,18 +108,7 @@ class SearchableList extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.search !== this.props.search) {
-      this.setState({search: this.props.search});
-    }
-
-    if (prevState.search !== this.state.search) {
-      this.performSearch(this.state.search);
-    }
-
-    if (prevProps.items !== this.state.all) {
-      this.setState({all: this.state.all}, ()=>{
-        console.log(`SearchableList: items changed`);
-        this.performSearch(this.state.search);
-      });
+      this.setState({search: this.props.search}, () => this.performSearch(this.state.search));
     }
   }
 
@@ -160,9 +151,12 @@ class SearchableList extends Component {
 
 SearchableList.defaultProps = {
   items: [],
-  onPressRow: () => {},
-  onClose: () => {},
-  onSearchChanged: () => {},
+  onPressRow: () => {
+  },
+  onClose: () => {
+  },
+  onSearchChanged: () => {
+  },
   search: '',
 };
 
