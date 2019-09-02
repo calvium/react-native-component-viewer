@@ -104,19 +104,19 @@ class SearchableList extends Component {
     };
   }
 
-  componentWillUpdate(nextProps, nextState) {
-    if (nextProps.search !== this.props.search) {
-      this.setState({search: nextProps.search});
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.search !== this.props.search) {
+      this.setState({search: this.props.search});
     }
 
-    if (nextState.search !== this.state.search) {
-      this.performSearch(nextState.search);
+    if (prevState.search !== this.state.search) {
+      this.performSearch(this.state.search);
     }
 
-    if (nextProps.items !== this.state.all) {
-      this.setState({all: nextProps.items}, ()=>{
+    if (prevProps.items !== this.state.all) {
+      this.setState({all: this.state.all}, ()=>{
         console.log(`SearchableList: items changed`);
-        this.performSearch(nextState.search);
+        this.performSearch(this.state.search);
       });
     }
   }
