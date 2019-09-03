@@ -80,17 +80,14 @@ class SearchableList extends Component {
     const allItems = this.props.items;
     this.state = {
       all: allItems,
-      ds: allItems,
+      visibleItems: allItems,
       selectedComponent: undefined,
-      search: this.props.search,
     };
 
     this.renderRow = ({item}) => <SceneRow onPress={() => this.props.onPressRow(item)} {...item} />;
 
     // type sets state - state change performs actual searching!
-    this.handleSearchInputChanged = filter => this.setState({search: filter}, () => {
-      this.performSearch(this.state.search);
-    });
+    this.handleSearchInputChanged = filter => this.performSearch(filter);
 
     /**
      * Search - lowercase everything. Search on name and title
@@ -102,13 +99,13 @@ class SearchableList extends Component {
         data => `${data.name} ${data.title}`.toLowerCase().indexOf(filterLC) !== -1,
         this.state.all
       );
-      this.setState({ds: filtered});
+      this.setState({visibleItems: filtered});
     };
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.search !== this.props.search) {
-      this.setState({search: this.props.search}, () => this.performSearch(this.state.search));
+      this.handleSearchInputChanged(this.props.search)
     }
   }
 
@@ -128,7 +125,7 @@ class SearchableList extends Component {
             autoCorrect={false}
             enablesReturnKeyAutomatically={true}
             style={styles.searchInput}
-            value={this.state.search}
+            defaultValue={this.props.search}
             onChangeText={this.handleSearchInputChanged}
             clearButtonMode={'while-editing'}
           />
@@ -140,7 +137,7 @@ class SearchableList extends Component {
           ref={r => (this.listView = r)}
           key={'list'}
           style={{flex: 1}}
-          data={this.state.ds}
+          data={this.state.visibleItems}
           renderItem={this.renderRow}
           ListEmptyComponent={this.renderEmpty}
         />
@@ -151,12 +148,9 @@ class SearchableList extends Component {
 
 SearchableList.defaultProps = {
   items: [],
-  onPressRow: () => {
-  },
-  onClose: () => {
-  },
-  onSearchChanged: () => {
-  },
+  onPressRow: () => {},
+  onClose: () => {},
+  onSearchChanged: () => {},
   search: '',
 };
 
