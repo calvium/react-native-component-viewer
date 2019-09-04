@@ -79,15 +79,11 @@ class SearchableList extends Component {
 
     const allItems = this.props.items;
     this.state = {
-      all: allItems,
       visibleItems: allItems,
       selectedComponent: undefined,
     };
 
     this.renderRow = ({item}) => <SceneRow onPress={() => this.props.onPressRow(item)} {...item} />;
-
-    // type sets state - state change performs actual searching!
-    this.handleSearchInputChanged = filter => this.performSearch(filter);
 
     /**
      * Search - lowercase everything. Search on name and title
@@ -97,7 +93,7 @@ class SearchableList extends Component {
       const filterLC = String(filter).toLowerCase();
       const filtered = R.filter(
         data => `${data.name} ${data.title}`.toLowerCase().indexOf(filterLC) !== -1,
-        this.state.all
+        this.props.items
       );
       this.setState({visibleItems: filtered});
     };
@@ -105,7 +101,12 @@ class SearchableList extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.search !== this.props.search) {
-      this.handleSearchInputChanged(this.props.search)
+      this.performSearch(this.props.search)
+    }
+
+    if (prevProps.items !== this.props.items) {
+      console.log(`SearchableList: items changed`);
+      this.performSearch(this.props.search);
     }
   }
 
@@ -126,7 +127,7 @@ class SearchableList extends Component {
             enablesReturnKeyAutomatically={true}
             style={styles.searchInput}
             defaultValue={this.props.search}
-            onChangeText={this.handleSearchInputChanged}
+            onChangeText={this.performSearch}
             clearButtonMode={'while-editing'}
           />
           <TouchableHighlight underlayColor={colors.whiteColor} onPress={this.props.onClose} style={styles.doneButton}>
