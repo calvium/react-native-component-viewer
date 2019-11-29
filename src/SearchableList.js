@@ -79,16 +79,11 @@ class SearchableList extends Component {
 
     const allItems = this.props.items;
     this.state = {
-      all: allItems,
-      ds: allItems,
+      visibleItems: allItems,
       selectedComponent: undefined,
-      search: this.props.search,
     };
 
     this.renderRow = ({item}) => <SceneRow onPress={() => this.props.onPressRow(item)} {...item} />;
-
-    // type sets state - state change performs actual searching!
-    this.handleSearchInputChanged = filter => this.setState({search: filter});
 
     /**
      * Search - lowercase everything. Search on name and title
@@ -98,26 +93,20 @@ class SearchableList extends Component {
       const filterLC = String(filter).toLowerCase();
       const filtered = R.filter(
         data => `${data.name} ${data.title}`.toLowerCase().indexOf(filterLC) !== -1,
-        this.state.all
+        this.props.items
       );
-      this.setState({ds: filtered});
+      this.setState({visibleItems: filtered});
     };
   }
 
-  componentWillUpdate(nextProps, nextState) {
-    if (nextProps.search !== this.props.search) {
-      this.setState({search: nextProps.search});
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.search !== this.props.search) {
+      this.performSearch(this.props.search)
     }
 
-    if (nextState.search !== this.state.search) {
-      this.performSearch(nextState.search);
-    }
-
-    if (nextProps.items !== this.state.all) {
-      this.setState({all: nextProps.items}, ()=>{
-        console.log(`SearchableList: items changed`);
-        this.performSearch(nextState.search);
-      });
+    if (prevProps.items !== this.props.items) {
+      console.log(`SearchableList: items changed`);
+      this.performSearch(this.props.search);
     }
   }
 
@@ -137,8 +126,8 @@ class SearchableList extends Component {
             autoCorrect={false}
             enablesReturnKeyAutomatically={true}
             style={styles.searchInput}
-            value={this.state.search}
-            onChangeText={this.handleSearchInputChanged}
+            defaultValue={this.props.search}
+            onChangeText={this.performSearch}
             clearButtonMode={'while-editing'}
           />
           <TouchableHighlight underlayColor={colors.whiteColor} onPress={this.props.onClose} style={styles.doneButton}>
@@ -149,7 +138,7 @@ class SearchableList extends Component {
           ref={r => (this.listView = r)}
           key={'list'}
           style={{flex: 1}}
-          data={this.state.ds}
+          data={this.state.visibleItems}
           renderItem={this.renderRow}
           ListEmptyComponent={this.renderEmpty}
         />
