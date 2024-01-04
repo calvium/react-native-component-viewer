@@ -20,13 +20,8 @@ npm i -S react-native-component-viewer
 
 # Dependencies
 
-This will require you to add the `Community AsyncStorage` to your project dependencies.
-
-```
-npm i -S @react-native-community/async-storage
-```
-
-And follow the instructions for <a href="https://github.com/react-native-community/react-native-async-storage/blob/master/docs/Linking.md"> manual linking </a>
+This will require you to add `@react-native-async-storage/async-storage` to your project
+dependencies. Instructions are at https://react-native-async-storage.github.io/async-storage/docs/install/
 
 # Usage
 
