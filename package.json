@@ -1,6 +1,6 @@
 {
   "name": "react-native-component-viewer",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "A searchable list of components or scenes in your app. Handy for tweaking layout or design without using the app",
   "main": "index.js",
   "scripts": {},
@@ -28,7 +28,7 @@
   "peerDependencies": {
     "react": "*",
     "react-native": "*",
-    "@react-native-community/async-storage": "*"
+    "@react-native-async-storage/async-storage": "*"
   },
   "devDependencies": {
     "eslint-config-calvium": "^0.3.0"
